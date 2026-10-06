@@ -89,4 +89,81 @@
 
   addEventListener('keydown', event => { if (event.key === 'Escape') { document.querySelector('.standalone-lightbox')?.remove(); document.querySelector('.standalone-modal')?.remove(); removeHover(); } });
 })();
-</script></body></html>
+</script>
+<script>
+/* ──────────────────────────────────────────────────────────────────────
+   嵌入支援：這頁會被 iframe 嵌進 dnschool.kolable.app/aimarketing
+   單獨開啟時這整段不做任何事。
+   ────────────────────────────────────────────────────────────────────── */
+(function(){
+  'use strict';
+  if (window.self === window.top) return;
+
+  var html = document.documentElement;
+  html.classList.add('embedded');
+
+  /* 外層會把 iframe 撐到跟內容一樣高，等於這個頁面「沒有自己的視窗」。
+     兩個後果要先擋掉：
+     1) 依賴視窗高度的尺寸（min-h-screen 等）會跟著變高 → 內容更高 → 無限膨脹
+     2) position:fixed 會黏在整份內容的頂端，不是使用者眼前 */
+  var st = document.createElement('style');
+  st.textContent = [
+    'html.embedded{--embed-vh:720px;--embed-top:0px}',
+    /* 0) 🔴 原頁 <html class="h-full"> + <body class="min-h-full"> 讓 body 高度跟著視窗走。
+          外層把 iframe 撐高 → 視窗變高 → body 跟著變高 → 量到的內容高只會漲不會縮。
+          嵌入時必須解開，body 才等於真正的內容高。 */
+    'html.embedded,html.embedded body{height:auto !important;min-height:0 !important}',
+    /* 1) 把視窗高度釘死成外層回報的真實視窗高 */
+    'html.embedded .min-h-screen{min-height:0 !important}',
+    'html.embedded [class*="min-h-[calc(100vh"]{min-height:var(--embed-vh) !important}',
+    'html.embedded .h-screen,html.embedded [class*="h-[100dvh]"]{height:var(--embed-vh) !important}',
+    /* 2) 導覽列改成跟著內容走 */
+    'html.embedded nav.sticky{position:static !important}',
+    /* 3) 彈窗、燈箱改成絕對定位，開在使用者正在看的那一段 */
+    'html.embedded .standalone-lightbox,html.embedded .standalone-modal{',
+    '  position:absolute !important;top:var(--embed-top) !important;',
+    '  bottom:auto !important;height:var(--embed-vh) !important}',
+    /* 4) 跟著滑鼠的預覽卡在嵌入時座標會錯，直接關掉 */
+    'html.embedded .standalone-hover-preview{display:none !important}'
+  ].join('');
+  (document.head || html).appendChild(st);
+
+  /* ── 回報內容高度 ────────────────────────────────────────────────
+     用 body 的實際排版高度，不要用 documentElement.scrollHeight ——
+     後者永遠不小於視窗高度，外層撐高之後就再也縮不回來。 */
+  var last = 0;
+  function contentHeight(){
+    var cs = getComputedStyle(document.body);
+    return Math.ceil(document.body.getBoundingClientRect().height
+      + parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0));
+  }
+  function report(force){
+    if (!document.body) return;
+    if (innerWidth < 50) return;          // 版面還沒成形，量出來不可信
+    var h = contentHeight();
+    if (!(h > 200)) return;
+    if (!force && Math.abs(h - last) < 2) return;
+    last = h;
+    parent.postMessage({ type: 'adsweb:height', height: h }, '*');
+  }
+
+  var forced = function(){ report(true); };
+  addEventListener('load', forced);
+  addEventListener('resize', forced);
+  document.addEventListener('DOMContentLoaded', forced);
+  if (window.ResizeObserver) new ResizeObserver(function(){ report(); }).observe(document.body);
+  [100, 400, 900, 1800, 3000, 5000].forEach(function(t){ setTimeout(forced, t); });
+  report(true);
+
+  /* ── 接收外層的視窗資訊：真實視窗高 + 目前捲到 iframe 的哪一段 ── */
+  addEventListener('message', function(e){
+    var d = e.data || {};
+    if (d.type !== 'adsweb:viewport') return;
+    if (typeof d.height === 'number' && d.height > 200)
+      html.style.setProperty('--embed-vh', d.height + 'px');
+    if (typeof d.top === 'number')
+      html.style.setProperty('--embed-top', Math.max(0, d.top) + 'px');
+  });
+})();
+</script>
+</body></html>

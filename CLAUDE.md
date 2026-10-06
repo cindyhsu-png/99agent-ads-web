@@ -3,10 +3,11 @@
 ## 正本與來源
 - 來源：2026-10-06 從 `stock-page-standalone.zip`（線上 https://stock.99agent.app/ 存下的單檔 HTML）解出，改名為 `index.html`。
 - 這份 repo 是**修改用的副本**；線上 stock.99agent.app 不會因為改這裡就變。
-- GitHub：`cindyhsu-png/99agent-ads-web`（private）。
+- GitHub：`cindyhsu-png/99agent-ads-web`（**public**，2026-10-06 為開 Pages 從 private 改公開；免費方案 private 不能開 Pages）。
 
 ## 部署
-- 目前**沒有部署**。要上線需另外決定（GitHub Pages／Kolable iframe／換掉 stock.99agent.app 原站）。
+- GitHub Pages：https://cindyhsu-png.github.io/99agent-ads-web/ （推 main 自動更新，約 1 分鐘）。
+- 原站 stock.99agent.app 不受影響。
 
 ## 注意事項
 - 單檔約 520KB，原站是 Next.js 匯出：CSS、JS 都內嵌在 `index.html`，改文案直接搜中文字串改。

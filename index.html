@@ -183,4 +183,18 @@ html:not(.product-cover) section{padding-top:40px!important;padding-bottom:40px!
 #pipeline [style*="repeat(4"]>div:nth-child(n+9),#pipeline [style*="repeat(3"]>div:nth-child(n+5){display:none!important}
 #pipeline [style*="repeat(4"]>div{aspect-ratio:1;height:auto!important}
 @media(max-width:480px){#pipeline [style*="grid-template-rows"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-</style></body></html>
+</style><script>
+(function(){
+ if(window.parent===window)return;
+ var checkoutReady=false;
+ window.addEventListener('message',function(e){
+  if(e.origin==='https://dnschool.kolable.app' && e.source===window.parent && e.data && e.data.type==='adsweb:checkout-ready')checkoutReady=true;
+ });
+ document.addEventListener('click',function(e){
+  var a=e.target.closest('a[href*="dnschool.kolable.app/projects/ae316492-a9ad-4072-b9b4-369eed800888"]');
+  if(!a || !checkoutReady)return;
+  e.preventDefault();
+  window.parent.postMessage({type:'adsweb:checkout'},'https://dnschool.kolable.app');
+ });
+})();
+</script></body></html>

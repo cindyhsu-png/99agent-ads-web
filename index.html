@@ -165,4 +165,16 @@ if (new URLSearchParams(location.search).get('purchase') === 'plans') {
     link.target = '_top';
   });
 }
-</script></body></html>
+</script><script>
+(function(){
+ var q=new URLSearchParams(location.search);
+ if(q.get('purchase')==='plans') document.documentElement.classList.add('product-details');
+ if(q.get('view')==='cover') document.documentElement.classList.add('product-cover');
+})();
+</script>
+<style>
+.product-details nav,.product-details main>section:first-child,.product-details #pricing,.product-details #cta,.product-details a[href*="kolable.app/projects/"],.product-details a[href="#pricing"]{display:none!important}
+.product-cover nav,.product-cover main>section:not(:first-child),.product-cover a,.product-cover button{display:none!important}
+.product-cover body{width:1280px!important;min-width:1280px!important;margin:0!important}
+.product-cover main>section:first-child{height:720px!important;min-height:720px!important}
+</style></body></html>

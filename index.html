@@ -178,9 +178,9 @@ if (new URLSearchParams(location.search).get('purchase') === 'plans') {
 .product-cover body{width:1280px!important;min-width:1280px!important;margin:0!important}
 .product-cover section:first-of-type{height:720px!important;min-height:720px!important}
 </style><style>
-.product-details section{padding-top:40px!important;padding-bottom:40px!important}
-.product-details #pipeline [style*="grid-template-rows"]{grid-template-rows:none!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;width:100%!important;gap:10px!important}
-.product-details #pipeline [style*="repeat(4"]>div:nth-child(n+9),.product-details #pipeline [style*="repeat(3"]>div:nth-child(n+5){display:none!important}
-.product-details #pipeline [style*="repeat(4"]>div{aspect-ratio:1;height:auto!important}
-@media(max-width:480px){.product-details #pipeline [style*="grid-template-rows"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+html:not(.product-cover) section{padding-top:40px!important;padding-bottom:40px!important}
+#pipeline [style*="grid-template-rows"]{grid-template-rows:none!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;width:100%!important;gap:10px!important}
+#pipeline [style*="repeat(4"]>div:nth-child(n+9),#pipeline [style*="repeat(3"]>div:nth-child(n+5){display:none!important}
+#pipeline [style*="repeat(4"]>div{aspect-ratio:1;height:auto!important}
+@media(max-width:480px){#pipeline [style*="grid-template-rows"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style></body></html>
